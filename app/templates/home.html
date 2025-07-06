@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>House Price Prediction</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        label {
+            font-weight: bold;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Popup styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            width: 500px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h2>🏡 House Price Prediction</h2>
+
+    <form action="/predict" method="POST">
+
+        <div class="form-group"><input type="number" step="any" name="bedrooms" placeholder="Bedrooms" required></div>
+        <div class="form-group"><input type="number" step="any" name="bathrooms" placeholder="Bathrooms" required></div>
+        <div class="form-group"><input type="number" step="any" name="sqft_living" placeholder="Sqft Living" required></div>
+        <div class="form-group"><input type="number" step="any" name="sqft_lot" placeholder="Sqft Lot" required></div>
+        <div class="form-group"><input type="number" step="any" name="floors" placeholder="Floors" required></div>
+
+        <div class="form-group">
+            <label for="waterfront">Waterfront:</label>
+            <select name="waterfront" required>
+                <option value="N">No</option>
+                <option value="Y">Yes</option>
+            </select>
+        </div>
+
+        <div class="form-group"><input type="number" step="any" name="view" placeholder="View (0-4)" required></div>
+
+        <div class="form-group">
+            <label for="condition">Condition:</label>
+            <select name="condition" required>
+                <option value="Poor">Poor</option>
+                <option value="Fair">Fair</option>
+                <option value="Average">Average</option>
+                <option value="Good">Good</option>
+                <option value="Very Good">Very Good</option>
+            </select>
+        </div>
+
+        <div class="form-group"><input type="number" step="any" name="grade" placeholder="Grade (1-13)" required></div>
+        <div class="form-group"><input type="number" step="any" name="sqft_above" placeholder="Sqft Above" required></div>
+        <div class="form-group"><input type="number" step="any" name="sqft_basement" placeholder="Sqft Basement" required></div>
+        <div class="form-group"><input type="number" step="any" name="yr_built" placeholder="Year Built" required></div>
+        <div class="form-group"><input type="number" step="any" name="yr_renovated" placeholder="Year Renovated" required></div>
+        <div class="form-group"><input type="number" step="any" name="zipcode" placeholder="Zipcode" required></div>
+        <div class="form-group"><input type="number" step="any" name="lat" placeholder="Latitude" required></div>
+        <div class="form-group"><input type="number" step="any" name="long" placeholder="Longitude" required></div>
+        <div class="form-group"><input type="number" step="any" name="sqft_living15" placeholder="Sqft Living (neighbor)" required></div>
+        <div class="form-group"><input type="number" step="any" name="sqft_lot15" placeholder="Sqft Lot (neighbor)" required></div>
+
+        <button type="submit">Predict Price</button>
+    </form>
+
+    {% if prediction_text %}
+    <!-- Modal popup -->
+    <div id="popup" class="popup-overlay">
+      <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <h3>{{ prediction_text }}</h3>
+      </div>
+    </div>
+
+    <script>
+      function closePopup() {
+        document.getElementById("popup").style.display = "none";
+      }
+    </script>
+
+    {% endif %}
+
+    {% if prediction_text %}
+    <div class="result">
+        <p>{{ prediction_text }}</p>
+    </div>
+    {% endif %}
+
+</body>
+</html>
